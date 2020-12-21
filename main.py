@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
+import os
 import socket
 
 def main():
-  HOST = '0.0.0.0'  # Standard loopback interface address (localhost)
-  PORT = 80         # Port to listen on (non-privileged ports are > 1023)
+  HOST = '0.0.0.0'
+  PORT = os.environ.get('PORT', 17995)
 
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
       s.bind((HOST, PORT))
