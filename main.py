@@ -18,6 +18,7 @@ def main():
               data = conn.recv(1024)
               if not data:
                   break
+              print('Connected from:', addr, end='')
               conn.sendall(data)
   
 if __name__ == '__main__':
