@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 
 import os
-import socket
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
-def main():
-  HOST = '0.0.0.0'
-  PORT = int(os.environ.get('PORT', 17995))
 
-  with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-      s.bind((HOST, PORT))
-      s.listen()
-      conn, addr = s.accept()
-      with conn:
-          print('Connected from:', addr)
-          conn.sendall(b'Connected from: ' + str(addr).encode())
-          while True:
-              data = conn.recv(1024)
-              if not data:
-                  break
-              print('Connected from:', addr, end='')
-              conn.sendall(data)
-  
-if __name__ == '__main__':
-  main()
+class MyServer(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(bytes(self.path, "utf-8"))
+
+if __name__ == "__main__":        
+    HOST = '0.0.0.0'
+    PORT = int(os.environ.get('PORT', 17995))
+    webServer = HTTPServer((HOST, PORT), MyServer)
+
+    try:
+        webServer.serve_forever()
+    except KeyboardInterrupt:
+        pass
+
+    webServer.server_close()
+    print("Server stopped.")
